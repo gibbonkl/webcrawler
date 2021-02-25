@@ -1,0 +1,28 @@
+{
+  "name": "webcrawler",
+  "version": "1.0.0",
+  "description": "TC IFRS",
+  "main": "index.js",
+  "dependencies": {
+    "puppeteer": "^7.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gibbonkl/webcrawler.git"
+  },
+  "keywords": [
+    "web",
+    "scraping",
+    "recursive"
+  ],
+  "author": "gibbonkl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gibbonkl/webcrawler/issues"
+  },
+  "homepage": "https://github.com/gibbonkl/webcrawler#readme"
+}
