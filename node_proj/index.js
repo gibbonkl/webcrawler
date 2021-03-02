@@ -6,7 +6,7 @@ const puppeteer = require("puppeteer");
   const page = await browser.newPage();
 
   // entry -> inicial page to start crawling
-  let inicialPage = "https://www.pichau.com.br";
+  let inicialPage = "https://ifrs.edu.br/riogrande";
   // entry -> page level do crawl
   let maxPageLevel = "7";
 
@@ -27,7 +27,7 @@ const puppeteer = require("puppeteer");
     for (let crawledUrl of crawledUrls) {
       // regex to control the crawling
       let reg = new RegExp(
-        "https://www.pichau.com.br" + "(/[^#/]+){0," + maxPageLevel + "}/?$"
+        "https://ifrs.edu.br/riogrande" + "(/[^#/]+){0," + maxPageLevel + "}/?$"
       );
 
       // only gets new matching pages
@@ -37,17 +37,21 @@ const puppeteer = require("puppeteer");
 
     // interaction increment
     index++;
-
-    // call recursion if a url of interest wasn't crawled yet
-    //setting a max index limits how many pages will be crawled
-    if (selectedUrls.length > index && index < 2)
-      return getUrls(selectedUrls[index]);
   }
 
   await getUrls(inicialPage);
 
+  try {
+    while (selectedUrls.length > index && index < 2) {
+      await getUrls(selectedUrls[index]);
+    }
+  } catch (error) {
+    print(error);
+  }
+
   console.log(selectedUrls);
   console.log("Pages crawled: " + index);
+  console.log("Pages selected: " + selectedUrls.length);
 
   browser.close();
 })();
