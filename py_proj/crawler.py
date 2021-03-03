@@ -5,6 +5,7 @@ import re
 inicialPage = "https://ifrs.edu.br/riogrande"
 maxPageLevel = '7'
 limitCrawledPages = 2
+reg = "https://ifrs.edu.br/riogrande(/[^#/]+){0," + maxPageLevel + "}/?$"
 
 selectedUrls = []
 index = -1
@@ -12,10 +13,9 @@ index = -1
 
 def getUrls(urlIn):
     global index
+
     page = requests.get(urlIn).text
     soup = BeautifulSoup(page, "html5lib")
-
-    reg = "https://ifrs.edu.br/riogrande(/[^#/]+){0," + maxPageLevel + "}/?$"
 
     urls = [a['href']
             for a in soup('a')
