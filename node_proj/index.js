@@ -8,6 +8,9 @@ const puppeteer = require("puppeteer");
   let inicialPage = "https://ifrs.edu.br/riogrande";
   let maxPageLevel = "7";
   let limitCrawledPages = 2;
+  let reg = new RegExp(
+    "https://ifrs.edu.br/riogrande" + "(/[^#/]+){0," + maxPageLevel + "}/?$"
+  );
 
   let selectedUrls = [];
   let crawledUrls = [];
@@ -24,11 +27,6 @@ const puppeteer = require("puppeteer");
 
     // selecting urls of interest
     for (let crawledUrl of crawledUrls) {
-      // regex to control the crawling
-      let reg = new RegExp(
-        "https://ifrs.edu.br/riogrande" + "(/[^#/]+){0," + maxPageLevel + "}/?$"
-      );
-
       // only gets new matching pages
       if (reg.test(crawledUrl) && selectedUrls.indexOf(crawledUrl) < 0)
         selectedUrls.push(crawledUrl);
