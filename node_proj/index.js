@@ -5,10 +5,9 @@ const puppeteer = require("puppeteer");
 
   const page = await browser.newPage();
 
-  // entry -> inicial page to start crawling
   let inicialPage = "https://ifrs.edu.br/riogrande";
-  // entry -> page level do crawl
   let maxPageLevel = "7";
+  let limitCrawledPages = 2;
 
   let selectedUrls = [];
   let crawledUrls = [];
@@ -42,7 +41,7 @@ const puppeteer = require("puppeteer");
   await getUrls(inicialPage);
 
   try {
-    while (selectedUrls.length > index && index < 2) {
+    while (selectedUrls.length > index && index < limitCrawledPages) {
       await getUrls(selectedUrls[index]);
     }
   } catch (error) {

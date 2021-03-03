@@ -2,21 +2,35 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
-page = requests.get("https://ifrs.edu.br/riogrande").text
-soup = BeautifulSoup(page, "html5lib")
+inicialPage = "https://ifrs.edu.br/riogrande"
+maxPageLevel = '7'
+limitCrawledPages = 2
 
 selectedUrls = []
+index = -1
 
-urls = [a['href']
-        for a in soup('a')
-        if(a.has_attr('href'))]
 
-reg = "https://ifrs.edu.br/riogrande(/[^#/]+){0,1}/?$"
+def getUrls(urlIn):
+    global index
+    page = requests.get(urlIn).text
+    soup = BeautifulSoup(page, "html5lib")
 
-crawledUrls = [url for url in urls if (
-    re.match(reg, url) and url not in selectedUrls)]
+    reg = "https://ifrs.edu.br/riogrande(/[^#/]+){0," + maxPageLevel + "}/?$"
 
-selectedUrls = [url for url in crawledUrls if (
-    url not in selectedUrls)]
+    urls = [a['href']
+            for a in soup('a')
+            if(a.has_attr('href') and re.match(reg, a['href']))]
 
-print(selectedUrls)
+    for url in urls:
+        if(url not in selectedUrls):
+            selectedUrls.append(url)
+
+    index += 1
+
+
+getUrls(inicialPage)
+
+while (len(selectedUrls) > index and index < limitCrawledPages):
+    getUrls(selectedUrls[index])
+
+print(len(selectedUrls))
