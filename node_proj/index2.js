@@ -10,11 +10,11 @@ const puppeteer = require("puppeteer");
 
   await page.setUserAgent(userAgent);
 
-  let initialPage = "https://www.pichau.com.br";
+  let initialPage = "https://www.kabum.com.br";
   let maxPageLevel = "3";
   let limitCrawledPages = 50;
   let reg = new RegExp(
-    "https://www.pichau.com.br" + "(/[^#/]+){0," + maxPageLevel + "}/?$"
+    "https://www.kabum.com.br" + "(/[^#/]+){0," + maxPageLevel + "}/?$"
   );
 
   let selectedUrls = [];
@@ -45,13 +45,16 @@ const puppeteer = require("puppeteer");
 
       price = await page.evaluate(() => {
         matches = document
-          .querySelector("span.price-boleto > span")
-          .textContent.match(/\$(.*),(.*)$/);
+          .querySelector("div.preco_traco > span > span > span > strong")
+          .textContent.match(/\$ ?(.*),(.*)$/);
         return matches[1] + "." + matches[2];
       });
 
       category = await page.evaluate(
-        () => document.querySelector("li.item.category > a").textContent
+        () =>
+          document
+            .querySelector("ol > li:nth-child(1) > a")
+            .textContent.match(/(.*) >$/)[1]
       );
     } catch (error) {}
 
@@ -69,6 +72,8 @@ const puppeteer = require("puppeteer");
   }
 
   //var myJson = JSON.stringify(data);
+
+  console.log(data);
 
   console.log(selectedUrls.length);
   console.log(data.length);

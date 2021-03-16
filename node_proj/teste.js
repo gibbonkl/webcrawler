@@ -1,27 +1,27 @@
 const puppeteer = require("puppeteer");
 
 (async () => {
+  // Pass the User-Agent Test.
   const userAgent =
     "Mozilla/5.0 (X11; Linux x86_64)" +
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36";
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   await page.setUserAgent(userAgent);
 
-  let initialPage = "https://www.pichau.com.br";
+  let initialPage =
+    "https://www.pichau.com.br/hardware/placa-m-e/placa-mae-asus-tuf-h310m-plus-gaming-br-ddr4-socket-lga1151-chipset-intel-h310";
   let maxPageLevel = "3";
-  let limitCrawledPages = 50;
+  let limitCrawledPages = 0;
   let reg = new RegExp(
-    "https://www.pichau.com.br" + "(/[^#/]+){0," + maxPageLevel + "}/?$"
+    "https://www.pichau.com.br" + "(/[^#/]+){" + maxPageLevel + "}/?$"
   );
 
   let selectedUrls = [];
   let crawledUrls = [];
   let index = -1;
-  let data = [];
-  let unwanted = [];
 
   async function getUrls(urlIn) {
     await page.goto(urlIn);
@@ -35,30 +35,10 @@ const puppeteer = require("puppeteer");
         selectedUrls.push(crawledUrl);
     }
 
-    let title;
-    let price;
-
-    try {
-      title = await page.evaluate(
-        () => document.querySelector("h1").textContent
-      );
-
-      price = await page.evaluate(() => {
-        matches = document
-          .querySelector("span.price-boleto > span")
-          .textContent.match(/\$(.*),(.*)$/);
-        return matches[1] + "." + matches[2];
-      });
-
-      category = await page.evaluate(
-        () => document.querySelector("li.item.category > a").textContent
-      );
-    } catch (error) {}
-
-    data && price && category
-      ? data.push([category, title, price, urlIn])
-      : unwanted.push(urlIn);
-
+    const textContent = await page.evaluate(() => {
+      return document.body.innerHTML;
+    });
+    console.log(textContent);
     index++;
   }
 
@@ -68,11 +48,8 @@ const puppeteer = require("puppeteer");
     await getUrls(selectedUrls[index]);
   }
 
-  //var myJson = JSON.stringify(data);
-
   console.log(selectedUrls.length);
-  console.log(data.length);
-  console.log(unwanted.length);
+  console.log(index);
 
   browser.close();
 })();
