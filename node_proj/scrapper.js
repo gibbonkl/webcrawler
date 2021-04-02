@@ -1,20 +1,21 @@
 const puppeteer = require("puppeteer");
-const Pichau = require("./Pichau");
+const Kabum = require("./Kabum");
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   const page = await browser.newPage();
 
   await page.setUserAgent(
-    "Mozilla/5.0 (X11; Linux x86_64)" +
-      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36"
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
   );
 
-  let limitCrawledPages = 50;
+  let limitCrawledPages = 1;
   let crawledUrls = [];
   let data = [];
 
-  async function getUrls(object, urlIn) {
+  async function getUrls(urlIn) {
     await page.goto(urlIn);
 
     crawledUrls = await page.$$eval("a", (assetLinks) =>
@@ -23,54 +24,44 @@ const Pichau = require("./Pichau");
 
     for (let crawledUrl of crawledUrls) {
       if (
-        object.getRegex().test(crawledUrl) &&
-        object.isInSelectedUrls(crawledUrl)
+        new RegExp(obj.getRegexPagesOfInterest()).test(crawledUrl) &&
+        obj.notInSelectedUrls(crawledUrl)
       )
-        object.setSelectedUrl(crawledUrl);
+        obj.setSelectedUrl(crawledUrl);
     }
 
-    let title;
-    let price;
+    if (new RegExp(obj.getRegexProducts()).test(urlIn)) {
+      try {
+        let title = await page.evaluate(
+          () => document.querySelector("h1").textContent
+        );
 
-    try {
-      title = await page.evaluate(
-        () => document.querySelector(object.getTitleSelector()).textContent
-      );
+        let price = await page.evaluate(
+          () =>
+            document
+              .querySelector(".preco_traco")
+              .textContent.match(/([0-9]+),([0-9]+)/)[0]
+        );
 
-      price = await page.evaluate(() => {
-        matches = document
-          .querySelector(object.getPriceSelector())
-          .textContent.match(/\$(.*),(.*)$/);
-        return matches[1] + "." + matches[2];
-      });
-
-      category = await page.evaluate(
-        () => document.querySelector(object.getCategorySelector()).textContent
-      );
-    } catch (error) {}
-
-    data && price && category
-      ? object.setData([category, title, price, urlIn])
-      : object.SetUnwatedUrl(urlIn);
-
-    object.IncrementIndex();
+        if (data && price) {
+          obj.setData([title, price, urlIn]);
+          obj.setProductUrl(urlIn);
+        } else obj.setUnwatedUrl(urlIn);
+      } catch (error) {}
+    }
+    obj.incrementIndex();
   }
 
-  const pichau = new Pichau();
+  const obj = new Kabum();
 
-  await getUrls(pichau, pichau.getInitialPage());
+  await getUrls(obj.getInitialPage());
 
   while (
-    pichau.getSelectedUrlsNumber() > pichau.getIndex() &&
-    pichau.getIndex() < limitCrawledPages
+    obj.getSelectedUrlsLength() > obj.getIndex() &&
+    obj.getIndex() < limitCrawledPages
   ) {
-    await getUrls(pichau.getNextUrl());
+    await getUrls(obj.getNextUrl());
   }
-
-  //coletado
-  console.log(pichau.getSelectedUrlsNumber());
-  console.log(pichau.getData());
-  console.log(pichau.getUnwatedUrlsNumber());
 
   browser.close();
 })();

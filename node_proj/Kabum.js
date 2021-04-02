@@ -1,4 +1,4 @@
-module.exports = class Pichau {
+module.exports = class Kabum {
   #initialPage;
   #regex_pages_of_interest;
   #regex_products;
@@ -11,17 +11,17 @@ module.exports = class Pichau {
   #price_selector;
 
   constructor() {
-    this.#regex = "https://www.pichau.com.br.*";
-    this.#regex_products = "https://www.pichau.com.br(/[^#/]+){3}/?";
+    this.#regex_pages_of_interest = "https://www.kabum.com.br/.*";
+    this.#regex_products = "https://www.kabum.com.br.*/produto.*";
     this.#selectedUrls = [];
     this.#index = -1;
     this.#data = [];
     this.#unwanted = [];
     this.#product_url = [];
     this.#title_selector = "h1";
-    this.#price_selector = ".price-boleto";
+    this.#price_selector = ".preco_traco";
     this.#initialPage =
-      "https://www.pichau.com.br/hardware/placa-de-video/placa-de-video-asus-geforce-gt-1030-2gb-gddr5-64-bit-gt1030-sl-2g-brk";
+      "https://www.kabum.com.br/produto/112891/placa-m-e-asus-ex-b460m-v5-intel-lga-1200-matx-ddr4";
   }
 
   getInitialPage() {
