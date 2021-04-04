@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const Kabum = require("./Kabum");
+const Pichau = require("./Pichau");
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -11,11 +12,10 @@ const Kabum = require("./Kabum");
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
   );
 
-  let limitCrawledPages = 1;
+  let limitCrawledPages = 5;
   let crawledUrls = [];
-  let data = [];
 
-  async function getUrls(urlIn) {
+  async function getUrls(obj, urlIn) {
     await page.goto(urlIn);
 
     crawledUrls = await page.$$eval("a", (assetLinks) =>
@@ -30,38 +30,35 @@ const Kabum = require("./Kabum");
         obj.setSelectedUrl(crawledUrl);
     }
 
-    if (new RegExp(obj.getRegexProducts()).test(urlIn)) {
+    if (
+      new RegExp(obj.getRegexProducts()).test(urlIn) &&
+      obj.notInSelectedUrls(urlIn)
+    ) {
       try {
-        let title = await page.evaluate(
-          () => document.querySelector("h1").textContent
-        );
+        let title = await page.evaluate(obj.getTitleSelector());
+        let price = await page.evaluate(obj.getPriceSelector());
 
-        let price = await page.evaluate(
-          () =>
-            document
-              .querySelector(".preco_traco")
-              .textContent.match(/([0-9]+),([0-9]+)/)[0]
-        );
-
-        if (data && price) {
+        if (title && price) {
           obj.setData([title, price, urlIn]);
           obj.setProductUrl(urlIn);
         } else obj.setUnwatedUrl(urlIn);
       } catch (error) {}
     }
+
     obj.incrementIndex();
+
+    if (
+      obj.getSelectedUrlsLength() > obj.getIndex() &&
+      obj.getIndex() < limitCrawledPages
+    ) {
+      return getUrls(obj, obj.getNextUrl());
+    }
   }
 
-  const obj = new Kabum();
+  //const website = new Kabum();
+  const website = new Pichau();
 
-  await getUrls(obj.getInitialPage());
-
-  while (
-    obj.getSelectedUrlsLength() > obj.getIndex() &&
-    obj.getIndex() < limitCrawledPages
-  ) {
-    await getUrls(obj.getNextUrl());
-  }
+  await getUrls(website, website.getInitialPage());
 
   browser.close();
 })();

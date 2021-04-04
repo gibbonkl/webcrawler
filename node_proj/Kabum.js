@@ -7,8 +7,6 @@ module.exports = class Kabum {
   #data;
   #unwanted;
   #product_url;
-  #title_selector;
-  #price_selector;
 
   constructor() {
     this.#regex_pages_of_interest = "https://www.kabum.com.br/.*";
@@ -18,10 +16,19 @@ module.exports = class Kabum {
     this.#data = [];
     this.#unwanted = [];
     this.#product_url = [];
-    this.#title_selector = "h1";
-    this.#price_selector = ".preco_traco";
     this.#initialPage =
-      "https://www.kabum.com.br/produto/112891/placa-m-e-asus-ex-b460m-v5-intel-lga-1200-matx-ddr4";
+      "https://www.kabum.com.br/cgi-local/site/produtos/descricao_ofertas.cgi?codigo=111107";
+  }
+
+  getTitleSelector() {
+    return () => document.querySelector("h1").textContent;
+  }
+
+  getPriceSelector() {
+    return () =>
+      document
+        .querySelector(".preco_traco")
+        .textContent.match(/([0-9]+),([0-9]+)/)[0];
   }
 
   getInitialPage() {
@@ -34,14 +41,6 @@ module.exports = class Kabum {
 
   getRegexProducts() {
     return this.#regex_products;
-  }
-
-  getTitleSelector() {
-    return this.#title_selector;
-  }
-
-  getPriceSelector() {
-    return this.#price_selector;
   }
 
   incrementIndex() {
@@ -66,6 +65,10 @@ module.exports = class Kabum {
 
   getUnwatedUrlsLength() {
     return this.#unwanted.length;
+  }
+
+  getSelectedUrls() {
+    return this.#selectedUrls;
   }
 
   setSelectedUrl(url) {
