@@ -3,9 +3,7 @@ const Kabum = require("./Kabum");
 const Pichau = require("./Pichau");
 
 (async () => {
-  const browser = await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   await page.setUserAgent(
