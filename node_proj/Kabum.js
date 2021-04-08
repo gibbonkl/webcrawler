@@ -1,23 +1,22 @@
 module.exports = class Kabum {
   #initialPage;
-  #regex_pages_of_interest;
-  #regex_products;
+  #regexPagesOfInterest;
+  #regexProducts;
   #selectedUrls;
   #index;
   #data;
-  #unwanted;
-  #product_url;
+  #unwantedUrls;
+  #productUrls;
 
   constructor() {
-    this.#regex_pages_of_interest = "https://www.kabum.com.br/.*";
-    this.#regex_products = "https://www.kabum.com.br.*/produto.*";
+    this.#regexPagesOfInterest = "www.kabum.com.br/[^#.]+$";
+    this.#regexProducts = "www.kabum.com.br[^#.]*/produto[^#.]*$";
     this.#selectedUrls = [];
-    this.#index = -1;
+    this.#index = 0;
     this.#data = [];
-    this.#unwanted = [];
-    this.#product_url = [];
-    this.#initialPage =
-      "https://www.kabum.com.br/cgi-local/site/produtos/descricao_ofertas.cgi?codigo=111107";
+    this.#unwantedUrls = [];
+    this.#productUrls = [];
+    this.#initialPage = "https://www.kabum.com.br/perifericos/kit-gamer";
   }
 
   getTitleSelector() {
@@ -36,11 +35,11 @@ module.exports = class Kabum {
   }
 
   getRegexPagesOfInterest() {
-    return this.#regex_pages_of_interest;
+    return this.#regexPagesOfInterest;
   }
 
   getRegexProducts() {
-    return this.#regex_products;
+    return this.#regexProducts;
   }
 
   incrementIndex() {
@@ -64,7 +63,7 @@ module.exports = class Kabum {
   }
 
   getUnwatedUrlsLength() {
-    return this.#unwanted.length;
+    return this.#unwantedUrls.length;
   }
 
   getSelectedUrls() {
@@ -84,18 +83,18 @@ module.exports = class Kabum {
   }
 
   setProductUrl(url) {
-    this.#product_url.push(url);
+    this.#productUrls.push(url);
   }
 
   notInProductUrl(url) {
-    return this.#unwanted.indexOf(url) == -1;
+    return this.#unwantedUrls.indexOf(url) == -1;
   }
 
   notInUnwatedUrl(url) {
-    return this.#unwanted.indexOf(url) == -1;
+    return this.#unwantedUrls.indexOf(url) == -1;
   }
 
   setUnwatedUrl(url) {
-    this.#unwanted.push(url);
+    this.#unwantedUrls.push(url);
   }
 };

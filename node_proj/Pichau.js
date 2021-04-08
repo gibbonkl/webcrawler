@@ -1,21 +1,21 @@
 module.exports = class Pichau {
   #initialPage;
-  #regex_pages_of_interest;
-  #regex_products;
+  #regexPagesOfInterest;
+  #regexProducts;
   #selectedUrls;
   #index;
   #data;
-  #unwanted;
-  #product_url;
+  #unwantedUrls;
+  #productUrls;
 
   constructor() {
-    this.#regex_pages_of_interest = "https://www.pichau.com.br[^#]*$";
-    this.#regex_products = "https://www.pichau.com.br(/[^#/]+){3}/?$";
+    this.#regexPagesOfInterest = "www.pichau.com.br/[^#.]+$";
+    this.#regexProducts = "www.pichau.com.br(/[^#/.]+){3}/?$";
     this.#selectedUrls = [];
-    this.#index = -1;
+    this.#index = 0;
     this.#data = [];
-    this.#unwanted = [];
-    this.#product_url = [];
+    this.#unwantedUrls = [];
+    this.#productUrls = [];
     this.#initialPage =
       "https://www.pichau.com.br/hardware/placa-de-video/placa-de-video-asus-geforce-gt-1030-2gb-gddr5-64-bit-gt1030-sl-2g-brk";
   }
@@ -36,11 +36,11 @@ module.exports = class Pichau {
   }
 
   getRegexPagesOfInterest() {
-    return this.#regex_pages_of_interest;
+    return this.#regexPagesOfInterest;
   }
 
   getRegexProducts() {
-    return this.#regex_products;
+    return this.#regexProducts;
   }
 
   incrementIndex() {
@@ -64,7 +64,7 @@ module.exports = class Pichau {
   }
 
   getUnwatedUrlsLength() {
-    return this.#unwanted.length;
+    return this.#unwantedUrls.length;
   }
 
   getSelectedUrls() {
@@ -84,18 +84,18 @@ module.exports = class Pichau {
   }
 
   setProductUrl(url) {
-    this.#product_url.push(url);
+    this.#productUrls.push(url);
   }
 
   notInProductUrl(url) {
-    return this.#unwanted.indexOf(url) == -1;
+    return this.#unwantedUrls.indexOf(url) == -1;
   }
 
   notInUnwatedUrl(url) {
-    return this.#unwanted.indexOf(url) == -1;
+    return this.#unwantedUrls.indexOf(url) == -1;
   }
 
   setUnwatedUrl(url) {
-    this.#unwanted.push(url);
+    this.#unwantedUrls.push(url);
   }
 };
