@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
-const Kabum = require("./Kabum");
-const Pichau = require("./Pichau");
+const Kabum = require("./KabumStrategy");
+const Pichau = require("./PichauStrategy");
 
 (async () => {
   const browser = await puppeteer.launch();
@@ -53,8 +53,8 @@ const Pichau = require("./Pichau");
     }
   }
 
-  const website = new Kabum();
-  //const website = new Pichau();
+  //const website = new Kabum();
+  const website = new Pichau();
 
   await getUrls(website, website.getInitialPage());
 

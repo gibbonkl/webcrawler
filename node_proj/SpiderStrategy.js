@@ -1,79 +1,23 @@
 module.exports = class SpiderStrategy {
-  constructor() {
-    if (this.constructor === Widget) {
-      throw new TypeError(
-        'Abstract class "Widget" cannot be instantiated directly.'
-      );
-    }
+  constructor() {}
 
-    if (this.schema === undefined) {
-      throw new TypeError("Classes extending the widget abstract class");
-    }
-  }
-
-  getTitleSelector() {
-    return pass;
-  }
-
-  getPriceSelector() {
-    return pass;
-  }
-
-  getInitialPage() {
-    return pass;
-  }
-
-  getRegexPagesOfInterest() {
-    return pass;
-  }
-
-  getRegexProducts() {
-    return pass;
-  }
-
+  getTitleSelector() {}
+  getPriceSelector() {}
+  getInitialPage() {}
+  getRegexPagesOfInterest() {}
+  getRegexProducts() {}
   incrementIndex() {}
-
-  getIndex() {
-    return pass;
-  }
-
+  getIndex() {}
   setData(extracted) {}
-
-  getData() {
-    return pass;
-  }
-
-  getNextUrl() {
-    return pass;
-  }
-
-  getUnwatedUrlsLength() {
-    return pass;
-  }
-
-  getSelectedUrls() {
-    return pass;
-  }
-
+  getData() {}
+  getNextUrl() {}
+  getUnwatedUrlsLength() {}
+  getSelectedUrls() {}
   setSelectedUrl(url) {}
-
-  getSelectedUrlsLength() {
-    return pass;
-  }
-
-  notInSelectedUrls(url) {
-    return pass;
-  }
-
+  getSelectedUrlsLength() {}
+  notInSelectedUrls(url) {}
   setProductUrl(url) {}
-
-  notInProductUrl(url) {
-    return pass;
-  }
-
-  notInUnwatedUrl(url) {
-    return pass;
-  }
-
+  notInProductUrl(url) {}
+  notInUnwatedUrl(url) {}
   setUnwatedUrl(url) {}
 };
