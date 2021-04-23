@@ -1,8 +1,7 @@
 const puppeteer = require("puppeteer");
-const Kabum = require("./KabumStrategy");
-const Pichau = require("./PichauStrategy");
+const models = require("../api/models");
 
-(async () => {
+module.exports = async (Spider) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
@@ -10,7 +9,7 @@ const Pichau = require("./PichauStrategy");
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
   );
 
-  let limitCrawledPages = 1;
+  let limitCrawledPages = 10;
   let crawledUrls = [];
 
   async function getUrls(obj, urlIn) {
@@ -37,7 +36,7 @@ const Pichau = require("./PichauStrategy");
         let price = await page.evaluate(obj.getPriceSelector());
 
         if (title && price) {
-          obj.setData([title, price, urlIn]);
+          obj.setData([urlIn, title, price]);
           obj.setProductUrl(urlIn);
         } else obj.setUnwatedUrl(urlIn);
       } catch (error) {}
@@ -53,13 +52,15 @@ const Pichau = require("./PichauStrategy");
     }
   }
 
-  //const website = new Kabum();
-  const website = new Pichau();
-
-  await getUrls(website, website.getInitialPage());
-
-  console.log(crawledUrls);
-  console.log(website.getData());
+  await getUrls(Spider, Spider.getInitialPage());
 
   browser.close();
-})();
+
+  Spider.getData().forEach((element) => {
+    models.ScrappingPages.create({
+      url: `${element[0]}`,
+      title: `${element[1]}`,
+      price: `${element[2]}`,
+    });
+  });
+};

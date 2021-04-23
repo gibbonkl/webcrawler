@@ -1,6 +1,6 @@
-const SpiderStrategy = require("./SpiderStrategy");
+const SpiderStrategy = require("../SpiderStrategy");
 
-module.exports = class PichauStrategy extends SpiderStrategy {
+module.exports = class KabumStrategy extends SpiderStrategy {
   #initialPage;
   #regexPagesOfInterest;
   #regexProducts;
@@ -12,15 +12,14 @@ module.exports = class PichauStrategy extends SpiderStrategy {
 
   constructor() {
     super();
-    this.#regexPagesOfInterest = "www.pichau.com.br/[^#.]+$";
-    this.#regexProducts = "www.pichau.com.br(/[^#/.]+){3}/?$";
+    this.#regexPagesOfInterest = "www.kabum.com.br/[^#.]+$";
+    this.#regexProducts = "www.kabum.com.br[^#.]*/produto[^#.]*$";
     this.#selectedUrls = [];
     this.#index = 0;
     this.#data = [];
     this.#unwantedUrls = [];
     this.#productUrls = [];
-    this.#initialPage =
-      "https://www.pichau.com.br/hardware/placa-de-video/placa-de-video-asus-geforce-gt-1030-2gb-gddr5-64-bit-gt1030-sl-2g-brk";
+    this.#initialPage = "https://www.kabum.com.br/hardware";
   }
 
   getTitleSelector() {
@@ -30,7 +29,7 @@ module.exports = class PichauStrategy extends SpiderStrategy {
   getPriceSelector() {
     return () =>
       document
-        .querySelector(".price-boleto")
+        .querySelector(".preco_traco")
         .textContent.match(/([0-9]+),([0-9]+)/)[0];
   }
 

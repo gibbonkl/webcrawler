@@ -2,13 +2,20 @@
   "name": "webcrawler",
   "version": "1.0.0",
   "description": "TC IFRS",
-  "main": "index.js",
+  "main": "./api/index.js",
   "dependencies": {
-    "puppeteer": "7.0.4"
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "path": "^0.12.7",
+    "puppeteer": "~7.0.4",
+    "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon ./api/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
