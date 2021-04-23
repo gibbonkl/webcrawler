@@ -1,6 +1,6 @@
 const SpiderStrategy = require("../SpiderStrategy");
 
-module.exports = class KabumStrategy extends SpiderStrategy {
+module.exports = class PichauStrategy extends SpiderStrategy {
   #initialPage;
   #regexPagesOfInterest;
   #regexProducts;
@@ -12,14 +12,15 @@ module.exports = class KabumStrategy extends SpiderStrategy {
 
   constructor() {
     super();
-    this.#regexPagesOfInterest = "www.kabum.com.br/[^#.]+$";
-    this.#regexProducts = "www.kabum.com.br[^#.]*/produto[^#.]*$";
+    this.#regexPagesOfInterest = "www.pichau.com.br/[^#.]+$";
+    this.#regexProducts = "www.pichau.com.br(/[^#/.]+){3}/?$";
     this.#selectedUrls = [];
     this.#index = 0;
     this.#data = [];
     this.#unwantedUrls = [];
     this.#productUrls = [];
-    this.#initialPage = "https://www.kabum.com.br/hardware";
+    this.#initialPage =
+      "https://www.pichau.com.br/hardware/placa-m-e/placa-mae-asus-tuf-h310m-plus-gaming-br-ddr4-socket-lga1151-chipset-intel-h310";
   }
 
   getTitleSelector() {
@@ -29,7 +30,7 @@ module.exports = class KabumStrategy extends SpiderStrategy {
   getPriceSelector() {
     return () =>
       document
-        .querySelector(".preco_traco")
+        .querySelector(".price-boleto")
         .textContent.match(/([0-9]+),([0-9]+)/)[0];
   }
 

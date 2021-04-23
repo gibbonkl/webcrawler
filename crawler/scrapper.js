@@ -9,7 +9,7 @@ module.exports = async (Spider) => {
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
   );
 
-  let limitCrawledPages = 10;
+  let limitCrawledPages = 1;
   let crawledUrls = [];
 
   async function getUrls(obj, urlIn) {
@@ -56,11 +56,15 @@ module.exports = async (Spider) => {
 
   browser.close();
 
-  Spider.getData().forEach((element) => {
-    models.ScrappingPages.create({
-      url: `${element[0]}`,
-      title: `${element[1]}`,
-      price: `${element[2]}`,
+  try {
+    Spider.getData().forEach((element) => {
+      models.ScrappingPages.create({
+        url: `${element[0]}`,
+        title: `${element[1]}`,
+        price: `${element[2]}`,
+      });
     });
-  });
+  } catch (error) {
+    pass;
+  }
 };

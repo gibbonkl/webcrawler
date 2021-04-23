@@ -1,6 +1,6 @@
 const SpiderStrategy = require("../SpiderStrategy");
 
-module.exports = class PichauStrategy extends SpiderStrategy {
+module.exports = class KabumStrategy extends SpiderStrategy {
   #initialPage;
   #regexPagesOfInterest;
   #regexProducts;
@@ -12,14 +12,15 @@ module.exports = class PichauStrategy extends SpiderStrategy {
 
   constructor() {
     super();
-    this.#regexPagesOfInterest = "www.pichau.com.br/[^#.]+$";
-    this.#regexProducts = "www.pichau.com.br(/[^#/.]+){3}/?$";
+    this.#regexPagesOfInterest = "[^#]*www.kabum.com.br/[^#]+$";
+    this.#regexProducts = "[^#]*www.kabum.com.br[^#]*/produto[^#]*$";
     this.#selectedUrls = [];
     this.#index = 0;
     this.#data = [];
     this.#unwantedUrls = [];
     this.#productUrls = [];
-    this.#initialPage = "https://www.pichau.com.br/hardware/";
+    this.#initialPage =
+      "https://www.kabum.com.br/cgi-local/site/produtos/descricao_ofertas.cgi?codigo=102746";
   }
 
   getTitleSelector() {
@@ -29,7 +30,7 @@ module.exports = class PichauStrategy extends SpiderStrategy {
   getPriceSelector() {
     return () =>
       document
-        .querySelector(".price-boleto")
+        .querySelector(".div.preco_normal-cm")
         .textContent.match(/([0-9]+),([0-9]+)/)[0];
   }
 
