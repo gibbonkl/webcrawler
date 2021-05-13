@@ -9,11 +9,13 @@ module.exports = class KabumStrategy extends SpiderStrategy {
   #data;
   #unwantedUrls;
   #productUrls;
+  #website;
 
   constructor() {
     super();
     this.#regexPagesOfInterest = "[^#]*www.kabum.com.br/[^#]+$";
     this.#regexProducts = "[^#]*www.kabum.com.br[^#]*/produto[^#]*$";
+    this.#website = "Kabum";
     this.#selectedUrls = [];
     this.#index = 0;
     this.#data = [];
@@ -32,6 +34,10 @@ module.exports = class KabumStrategy extends SpiderStrategy {
       document
         .querySelector(".div.preco_normal-cm")
         .textContent.match(/([0-9]+),([0-9]+)/)[0];
+  }
+
+  getWebsite() {
+    return this.#website;
   }
 
   getInitialPage() {

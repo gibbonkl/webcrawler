@@ -36,7 +36,7 @@ module.exports = async (Spider) => {
         let price = await page.evaluate(obj.getPriceSelector());
 
         if (title && price) {
-          obj.setData([urlIn, title, price]);
+          obj.setData([urlIn, title, price, obj.getWebsite()]);
           obj.setProductUrl(urlIn);
         } else obj.setUnwatedUrl(urlIn);
       } catch (error) {}
@@ -62,6 +62,7 @@ module.exports = async (Spider) => {
         url: `${element[0]}`,
         title: `${element[1]}`,
         price: `${element[2]}`,
+        website: `${element[3]}`,
       });
     });
   } catch (error) {

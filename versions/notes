@@ -1,0 +1,67 @@
+____________________________LOGICA PARA PEGAR TODOS OS LINKS____________________________
+initialPage = ''
+index = 0
+urls = []
+
+go to (initialPage)
+
+go to ()
+pega links
+limpa
+if urls.indexOf(link) <> -1 armazena
+index ++
+
+if url.lenght > index
+go to index + 1
+____________________________SEQUELIZE____________________________
+
+instala mysql local
+
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "path": "^0.12.7",
+    "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+
+//criar configurações iniciais do sequilize
+  npx sequelize-cli init 
+
+//passar locais das pastas do sequilize
+    criar na raiz arquivo .sequelizerc, com as seguintes configurações:
+        const path = require('path');
+        module.exports = {
+        'config': path.resolve('./api/config', 'config.json'),
+        'models-path': path.resolve('./api/models'),
+        'seeders-path': path.resolve('./api/seeders'),
+        'migrations-path': path.resolve('./api/migrations')
+        };
+
+//criar tabelas no sequelize
+  npx sequelize-cli model:create  --name ScrappingPages --atributes url:string,website:string,title:string,price:string,description:string,category:string
+
+//ajustar pk e nullable das tabelas
+./migration 
+./model
+
+//criar tabelas automaticamente
+npx sequelize-cli db:migrate
+
+//popular tabelas
+npx sequelize-cli seed:generate --name demo-urls
+
+//colocar os campos e tabela no arquivo do
+./seeders
+
+//popular tabela 
+npx sequelize-cli db:seed:all
+
+//desfazer seed (apaga tudo da tabela)
+npx sequelize-cli db:seed:undo:all
+
+//apagar seed de um arquivo
+npx sequelize-cli db:seed:undo --seed nome-do-arquivo
