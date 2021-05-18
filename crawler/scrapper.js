@@ -39,7 +39,9 @@ module.exports = async (Spider) => {
           obj.setData([urlIn, title, price, obj.getWebsite()]);
           obj.setProductUrl(urlIn);
         } else obj.setUnwatedUrl(urlIn);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error.message);
+      }
     }
 
     obj.incrementIndex();
@@ -66,6 +68,6 @@ module.exports = async (Spider) => {
       });
     });
   } catch (error) {
-    pass;
+    console.log(error.message);
   }
 };

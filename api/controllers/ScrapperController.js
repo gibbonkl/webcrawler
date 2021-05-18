@@ -1,5 +1,4 @@
 const database = require("../models");
-//CRUD
 
 class ScrapperController {
   static async createScrapedUrl(req, res) {
@@ -16,7 +15,6 @@ class ScrapperController {
 
   static async readScrappedPages(req, res) {
     try {
-      //looking for the return in the model so it can resolve the queries
       const pagesContent = await database.ScrappingPages.findAll();
       return res.status(200).json(pagesContent);
     } catch (error) {
