@@ -3,7 +3,7 @@ const scrapper = require("./scrapper");
 const updater = require("./updater");
 
 dirname = "C:/Users/karolina.gibbon/Documents/Git";
-/*
+
 readdir(`${dirname}/webcrawler/crawler/implementations`, (err, files) => {
   if (err) throw err;
 
@@ -13,7 +13,7 @@ readdir(`${dirname}/webcrawler/crawler/implementations`, (err, files) => {
     scrapper(new Spider());
   });
 });
-*/
+/*
 readdir(`${dirname}/webcrawler/crawler/implementations`, (err, files) => {
   if (err) throw err;
 
@@ -23,3 +23,4 @@ readdir(`${dirname}/webcrawler/crawler/implementations`, (err, files) => {
     updater(new Spider());
   });
 });
+*/

@@ -11,36 +11,52 @@ module.exports = async (Spider) => {
 
   let limitCrawledPages = 1;
   let crawledUrls = [];
+  let mappedUrls;
+
+  try {
+    mappedUrls = await models.ScrappingPages.findAll({
+      where: { website: String(Spider.getWebsite()) },
+      raw: true,
+    });
+
+    mappedUrls = mappedUrls.map((i) => i.url);
+  } catch (error) {
+    console.log(error.message);
+  }
 
   async function getUrls(obj, urlIn) {
-    await page.goto(urlIn);
+    //condição adicionada para separar updater
+    if (mappedUrls.indexOf(urlIn) == -1) {
+      await page.goto(urlIn);
 
-    crawledUrls = await page.$$eval("a", (assetLinks) =>
-      assetLinks.map((link) => link.href)
-    );
+      crawledUrls = await page.$$eval("a", (assetLinks) =>
+        assetLinks.map((link) => link.href)
+      );
 
-    for (let crawledUrl of crawledUrls) {
+      for (let crawledUrl of crawledUrls) {
+        if (
+          new RegExp(obj.getRegexPagesOfInterest()).test(crawledUrl) &&
+          obj.notInSelectedUrls(crawledUrl) &&
+          mappedUrls.indexOf(crawledUrl) == -1 //adicionada para separar updater
+        )
+          obj.setSelectedUrl(crawledUrl);
+      }
+
       if (
-        new RegExp(obj.getRegexPagesOfInterest()).test(crawledUrl) &&
-        obj.notInSelectedUrls(crawledUrl)
-      )
-        obj.setSelectedUrl(crawledUrl);
-    }
+        new RegExp(obj.getRegexProducts()).test(urlIn)
+        //&& obj.notInSelectedUrls(urlIn)
+      ) {
+        try {
+          let title = await page.evaluate(obj.getTitleSelector());
+          let price = await page.evaluate(obj.getPriceSelector());
 
-    if (
-      new RegExp(obj.getRegexProducts()).test(urlIn) &&
-      obj.notInSelectedUrls(urlIn)
-    ) {
-      try {
-        let title = await page.evaluate(obj.getTitleSelector());
-        let price = await page.evaluate(obj.getPriceSelector());
-
-        if (title && price) {
-          obj.setData([urlIn, title, price, obj.getWebsite()]);
-          obj.setProductUrl(urlIn);
-        } else obj.setUnwatedUrl(urlIn);
-      } catch (error) {
-        console.log(error.message);
+          if (title && price) {
+            obj.setData([urlIn, title, price, obj.getWebsite()]);
+            obj.setProductUrl(urlIn);
+          } else obj.setUnwatedUrl(urlIn);
+        } catch (error) {
+          //console.log(error.message); //Evaluation failed: TypeError: Cannot read property 'textContent' of null
+        }
       }
     }
 
