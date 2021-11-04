@@ -1,4 +1,3 @@
 node_modules/
-#notes
-#old_versions/
-#seeders/
+old_versions/
+seeders/
