@@ -19,6 +19,8 @@ module.exports = async (Spider) => {
       raw: true,
     });
 
+    console.log(Spider.getWebsite())
+
     mappedUrls = mappedUrls.map((i) => i.url);
   } catch (error) {
     console.log(error.message);

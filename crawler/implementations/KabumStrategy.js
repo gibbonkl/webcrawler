@@ -22,7 +22,7 @@ module.exports = class KabumStrategy extends SpiderStrategy {
     this.#unwantedUrls = [];
     this.#productUrls = [];
     this.#initialPage =
-      "https://www.kabum.com.br/cgi-local/site/produtos/descricao_ofertas.cgi?codigo=102746";
+      "https://www.kabum.com.br/produto/155512/memoria-xpg-spectrix-d41-rgb-8gb-3000mhz-ddr4-cl16-cinza-ax4u30008g16a-st41";
   }
 
   getTitleSelector() {
@@ -32,8 +32,9 @@ module.exports = class KabumStrategy extends SpiderStrategy {
   getPriceSelector() {
     return () =>
       document
-        .querySelector(".div.preco_normal-cm")
-        .textContent.match(/([0-9]+),([0-9]+)/)[0];
+        .querySelector(".fXFlpD")
+        .textContent.match(/([0-9]+,[0-9]+)À/)[1]
+;
   }
 
   getWebsite() {

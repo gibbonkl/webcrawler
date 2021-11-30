@@ -32,7 +32,7 @@ module.exports = class PichauStrategy extends SpiderStrategy {
   getPriceSelector() {
     return () =>
       document
-        .querySelector(".price-boleto")
+        .querySelector(".jss64")
         .textContent.match(/([0-9]+),([0-9]+)/)[0];
   }
 

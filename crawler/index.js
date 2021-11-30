@@ -2,7 +2,7 @@ const { readdir } = require("fs");
 const scrapper = require("./scrapper");
 const updater = require("./updater");
 
-dirname = "C:/Users/karolina.gibbon/Documents/Git";
+dirname = "/home/deb";
 
 readdir(`${dirname}/webcrawler/crawler/implementations`, (err, files) => {
   if (err) throw err;
