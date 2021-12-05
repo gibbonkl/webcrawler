@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       price: {
-        type: Sequelize.STRING,
+        type: Sequelize.FLOAT,
       },
       description: {
         type: Sequelize.STRING,
@@ -25,10 +25,12 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        default: new Date(),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        default: new Date(),
       },
     });
   },

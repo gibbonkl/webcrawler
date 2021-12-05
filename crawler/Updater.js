@@ -11,12 +11,17 @@ module.exports = async (Spider) => {
       raw: true,
     });
 
-    Spider.setMappedUrls(mappedUrls.map((i) => i.url));
+    mappedUrls = mappedUrls.map((i) => i.url);
   } catch (error) {
     console.log(error.message);
   }
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(
+    {
+    headless: true
+    ,args: ['--no-sandbox']
+    }
+  );
   const page = await browser.newPage();
 
   await page.setUserAgent(
@@ -33,20 +38,20 @@ module.exports = async (Spider) => {
         obj.setData([urlIn, price]);
       }
     } catch (error) {
-      console.log(error.message); //Evaluation failed: TypeError: Cannot read property 'textContent' of null
+      console.log(error.message);
     }
   }
 
-  // Spider.getMappedUrls().forEach((url) => {
-  const updates = await updateUrl(
-    Spider,
-    "https://www.pichau.com.br/hardware/fonte/fonte-cooler-master-mwe-450-white-80plus-mpe-4501-acaaw-br"
-  );
-  //});
+  try {
+    for (url of mappedUrls)
+      await updateUrl(Spider,url);
+  } catch (error) {    
+    console.log(error.message);
+  }
 
   try {
-    Spider.getData().forEach((element) => {
-      models.ScrappingPages.update(
+    for (element of Spider.getData()) {
+      await models.ScrappingPages.update(
         {
           price: `${element[1]}`,
         },
@@ -59,7 +64,7 @@ module.exports = async (Spider) => {
           },
         }
       );
-    });
+    };
   } catch (error) {
     return res.status(500).json(error.message);
   }

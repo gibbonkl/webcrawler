@@ -12,10 +12,10 @@ module.exports = class SpiderStrategy {
   getData() {}
   getNextUrl() {}
   getUnwatedUrlsLength() {}
-  getSelectedUrls() {}
-  setSelectedUrl(url) {}
-  getSelectedUrlsLength() {}
-  notInSelectedUrls(url) {}
+  getUrlsToAccess() {}
+  setUrlToAccess(url) {}
+  getUrlsToAccessLength() {}
+  notInUrlsToAccess(url) {}
   setProductUrl(url) {}
   notInProductUrl(url) {}
   notInUnwatedUrl(url) {}

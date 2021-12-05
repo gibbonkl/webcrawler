@@ -4,25 +4,25 @@ module.exports = class PichauStrategy extends SpiderStrategy {
   #initialPage;
   #regexPagesOfInterest;
   #regexProducts;
-  #selectedUrls;
+  #urlsToAccess;
   #index;
-  #data;
+  #data;//
   #unwantedUrls;
-  #productUrls;
+  #productUrls;//
   #website;
 
   constructor() {
     super();
     this.#regexPagesOfInterest = "www.pichau.com.br/[^#.]+$";
-    this.#regexProducts = "www.pichau.com.br(/[^#/.]+){3}/?$";
+    this.#regexProducts = ".*www.pichau.com.br\/([^#/.]+-.[^#/.]+){2,}\/?$";
     this.#website = "Pichau";
-    this.#selectedUrls = [];
+    this.#urlsToAccess = [];
     this.#index = 0;
-    this.#data = [];
+    this.#data = [];//
     this.#unwantedUrls = [];
-    this.#productUrls = [];
+    this.#productUrls = [];//
     this.#initialPage =
-      "https://www.pichau.com.br/hardware/placa-m-e/placa-mae-asus-tuf-h310m-plus-gaming-br-ddr4-socket-lga1151-chipset-intel-h310";
+      "https://www.pichau.com.br/hardware/";
   }
 
   getTitleSelector() {
@@ -31,9 +31,7 @@ module.exports = class PichauStrategy extends SpiderStrategy {
 
   getPriceSelector() {
     return () =>
-      document
-        .querySelector(".jss64")
-        .textContent.match(/([0-9]+),([0-9]+)/)[0];
+      document.querySelector(".jss69").textContent.match(/([0-9]+),([0-9]+)/)[0].replace(',','.');
   }
 
   getWebsite() {
@@ -60,39 +58,39 @@ module.exports = class PichauStrategy extends SpiderStrategy {
     return this.#index;
   }
 
-  setData(extracted) {
+  setData(extracted) {//
     this.#data.push(extracted);
   }
 
   getData() {
-    return this.#data;
+    return this.#data;//
   }
 
   getNextUrl() {
-    return this.#selectedUrls[this.#index];
+    return this.#urlsToAccess[this.#index];
   }
 
   getUnwatedUrlsLength() {
     return this.#unwantedUrls.length;
   }
 
-  getSelectedUrls() {
-    return this.#selectedUrls;
+  getUrlsToAccess() {
+    return this.#urlsToAccess;
   }
 
-  setSelectedUrl(url) {
-    this.#selectedUrls.push(url);
+  setUrlToAccess(url) {
+    this.#urlsToAccess.push(url);
   }
 
-  getSelectedUrlsLength() {
-    return this.#selectedUrls.length;
+  getUrlsToAccessLength() {
+    return this.#urlsToAccess.length;
   }
 
-  notInSelectedUrls(url) {
-    return this.#selectedUrls.indexOf(url) == -1;
+  notInUrlsToAccess(url) {
+    return this.#urlsToAccess.indexOf(url) == -1;
   }
 
-  setProductUrl(url) {
+  setProductUrl(url) { //
     this.#productUrls.push(url);
   }
 
