@@ -13,29 +13,13 @@ const authMiddleware = (req, res, next) => {
 
 const router = Router();
 
-/*
- * TODOS PRODUTOS
- * TODOS PRODUTOS POR LOJA
- * BUSCAR PRODUTOS PELO NOME E PREÇO
- */
+/* search products - all products, by name, by store or by price (range, min or max value) */
 router.get("/products", ScrapperController.readScrappedProducts);
 
-/*
- * ADICIONAR UMA NOVA PAGINA
- * AUTH
- */
+/* add or update a page - with authentication */
 router.post("/products", authMiddleware, ScrapperController.createScrapedUrl);
 
-/*
- * ATUALIZAR UMA PAGINA
- * AUTH
- */
-router.put("/products/:url", authMiddleware, ScrapperController.updateScrapedUrl);
-
-/*
- * REMOVER PAGINA
- * AUTH
- */
+/* remove a page - with authentication */
 router.delete("/products/:url", authMiddleware, ScrapperController.deleteScrapedUrl);
 
 module.exports = router;

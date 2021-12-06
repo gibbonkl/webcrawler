@@ -11,17 +11,16 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+  
   ScrappingPages.init(
     {
       url: {
         type: DataTypes.STRING,
         primaryKey: true,
       },
-      website: DataTypes.STRING,
+      store: DataTypes.STRING,
       title: DataTypes.STRING,
       price: DataTypes.FLOAT,
-      description: DataTypes.STRING,
-      category: DataTypes.STRING,
     },
     {
       sequelize,

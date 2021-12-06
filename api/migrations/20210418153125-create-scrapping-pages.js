@@ -7,7 +7,7 @@ module.exports = {
         primaryKey: true,
         allowNull: false,
       },
-      website: {
+      store: {
         type: Sequelize.STRING,
       },
       title: {
@@ -15,12 +15,6 @@ module.exports = {
       },
       price: {
         type: Sequelize.FLOAT,
-      },
-      description: {
-        type: Sequelize.STRING,
-      },
-      category: {
-        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

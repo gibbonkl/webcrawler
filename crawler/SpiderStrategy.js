@@ -3,21 +3,15 @@ module.exports = class SpiderStrategy {
 
   getTitleSelector() {}
   getPriceSelector() {}
+  getStore() {}
   getInitialPage() {}
-  getRegexPagesOfInterest() {}
+  getRegexPagesToCrawl() {}
   getRegexProducts() {}
   incrementIndex() {}
   getIndex() {}
-  setData(extracted) {}
-  getData() {}
   getNextUrl() {}
-  getUnwatedUrlsLength() {}
   getUrlsToAccess() {}
   setUrlToAccess(url) {}
   getUrlsToAccessLength() {}
   notInUrlsToAccess(url) {}
-  setProductUrl(url) {}
-  notInProductUrl(url) {}
-  notInUnwatedUrl(url) {}
-  setUnwatedUrl(url) {}
 };

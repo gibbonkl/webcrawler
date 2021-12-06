@@ -7,32 +7,17 @@ const api = axios.create({
   }
 });
 
-
-const InsertProduct = async (product) => {
+exports.InsertProduct = async (product) => {
 
   const response = await api.post('/products', product);
-  console.log('Inserting...');
-  console.log(response.status);
-  console.log(response.data);
-
-}
-/*
-const DeleteProduct = async (product) => {
-
-  const response = await api.delete("/products/:url", product);
-  console.log('Deleting...');
-  console.log(response.status);
-  console.log(response.data);
+  console.log('Inserting/updating success:', response.data[1], response.data[0].url);
 
 }
 
-const UpdateProduct = async (product) => {
+exports.SelectProducts = async (store) => {
 
-  const response = await api.put("/products/:url", product);
-  console.log('Updating...');
-  console.log(response.status);
-  console.log(response.data);
+  const response = await api.get('/products',store=store);
+  console.log('Selecting... Code:', response.status);
+  return (response.data.content);
 
 }
-*/
-module.exports = InsertProduct;

@@ -1,6 +1,6 @@
 const SpiderStrategy = require("../SpiderStrategy");
 
-module.exports = class PichauStrategy extends SpiderStrategy {
+module.exports = class TerabyteStrategy extends SpiderStrategy {
   #store;
   #initialPage;
   #regexPagesToCrawl;
@@ -10,10 +10,10 @@ module.exports = class PichauStrategy extends SpiderStrategy {
 
   constructor() {
     super();
-    this.#store = "Pichau";
-    this.#initialPage = "https://www.pichau.com.br/";
-    this.#regexPagesToCrawl = ".*www.pichau.com.br\/?[^#.]*$";
-    this.#regexProducts = ".*www.pichau.com.br\/([^#/.]+-.[^#/.]+){2,}\/?$";
+    this.#store = "Terabyte";
+    this.#initialPage = "http://www.terabyteshop.com.br/hardware";
+    this.#regexPagesToCrawl = ".*terabyteshop.com.br\/?[^#.]*$";
+    this.#regexProducts = ".*www.terabyteshop.com.br\/produto\/[0-9]+\/([^#/.]+-.[^#/.]+){2,}\/?$";
     this.#urlsToAccess = [];
     this.#index = 0;
   }
@@ -24,7 +24,7 @@ module.exports = class PichauStrategy extends SpiderStrategy {
 
   getPriceSelector() {
     return () =>
-      document.querySelector(".jss69").textContent.match(/([0-9]+),([0-9]+)/)[0].replace(',','.');
+    document.querySelector(".valParc").textContent.match(/([0-9]*)\.?([0-9]+),([0-9]+)/)[0].replace('.','').replace(',','.');
   }
 
   getStore() {

@@ -1,73 +1,50 @@
 const puppeteer = require("puppeteer");
-const models = require("../api/models");
-const { Op } = require("sequelize");
+const { InsertProduct, SelectProducts } = require("./api");
 
 module.exports = async (Spider) => {
-  let mappedUrls;
-
-  try {
-    mappedUrls = await models.ScrappingPages.findAll({
-      where: { website: String(Spider.getWebsite()) },
-      raw: true,
-    });
-
-    mappedUrls = mappedUrls.map((i) => i.url);
-  } catch (error) {
-    console.log(error.message);
-  }
-
-  const browser = await puppeteer.launch(
-    {
-    headless: true
-    ,args: ['--no-sandbox']
-    }
-  );
+  let dbUrls = [];
+  
+  /* headless browser configs */
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
-
+  
   await page.setUserAgent(
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
   );
+  
+  /* gets database urls */
+  try {
+    dbUrls = await SelectProducts({ store: Spider.getStore() });
+    dbUrls = dbUrls.map((row) => row.url);
+    console.log(dbUrls.length, " mapped urls from the database");
+  } catch (error) {
+    console.log("db mapped urls error: \n",error.message);
+  }
 
-  async function updateUrl(obj, urlIn) {
+  /* record updater */
+  async function updater(spiderInstance, urlIn) {
     await page.goto(urlIn);
 
     try {
-      let price = await page.evaluate(obj.getPriceSelector());
+      let title = await page.evaluate(spiderInstance.getTitleSelector());
+      let price = await page.evaluate(spiderInstance.getPriceSelector());
 
-      if (price) {
-        obj.setData([urlIn, price]);
+      if (title && price) {
+        await InsertProduct({
+          url: urlIn,
+          title: title,
+          price: price,
+          store: spiderInstance.getStore(),
+        });
       }
     } catch (error) {
-      console.log(error.message);
+      console.log("Did not insert. Error: ", error.message);
     }
   }
-
-  try {
-    for (url of mappedUrls)
-      await updateUrl(Spider,url);
-  } catch (error) {    
-    console.log(error.message);
+  
+  for (let url of dbUrls) {
+    await updater(Spider, url);
   }
-
-  try {
-    for (element of Spider.getData()) {
-      await models.ScrappingPages.update(
-        {
-          price: `${element[1]}`,
-        },
-        {
-          where: {
-            [Op.and]: [
-              { url: `${element[0]}` },
-              { price: { [Op.not]: `${element[1]}` } },
-            ],
-          },
-        }
-      );
-    };
-  } catch (error) {
-    return res.status(500).json(error.message);
-  }
-
+  
   browser.close();
 };
