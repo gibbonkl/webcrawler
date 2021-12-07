@@ -11,6 +11,6 @@ readdir(`${dirname}/webcrawler/crawler/implementations`, (err, files) => {
     const Spider = require(`./implementations/${path}`);
 
     scraper(new Spider());
-    updater(new Spider());
+    //updater(new Spider());
   });
 });

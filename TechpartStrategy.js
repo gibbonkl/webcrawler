@@ -1,6 +1,6 @@
 const SpiderStrategy = require("../SpiderStrategy");
 
-module.exports = class TerabyteStrategy extends SpiderStrategy {
+module.exports = class TechpartStrategy extends SpiderStrategy {
   #store;
   #initialPage;
   #regexPagesToCrawl;
@@ -10,10 +10,10 @@ module.exports = class TerabyteStrategy extends SpiderStrategy {
 
   constructor() {
     super();
-    this.#store = "Terabyte";
-    this.#initialPage = "http://www.terabyteshop.com.br/hardware";
-    this.#regexPagesToCrawl = ".*terabyteshop.com.br\/?[^#.]*$";
-    this.#regexProducts = ".*www.terabyteshop.com.br\/produto\/[0-9]+\/([^#/.]+-.[^#/.]+){2,}\/?$";
+    this.#store = "Techpart";
+    this.#initialPage = "https://www.techpartinfo.com.br/";
+    this.#regexPagesToCrawl = ".*techpartinfo.com.br\/?[^#.]*$";
+    this.#regexProducts = ".*www.techpartinfo.com.br\/produto\/([^#/.]+-.[^#/.]+){2,}\/?$";
     this.#urlsToAccess = [];
     this.#index = 0;
   }
@@ -24,7 +24,7 @@ module.exports = class TerabyteStrategy extends SpiderStrategy {
 
   getPriceSelector() {
     return () =>
-    document.querySelector(".valParc").textContent.match(/([0-9]*)\.?([0-9]+),([0-9]+)/)[0].replace('.','').replace(',','.');
+    document.querySelector(".desconto-a-vista").innerText.match(/([0-9]*)\.?([0-9]+),([0-9]+)/)[0].replace(',','.');
   }
 
   getStore() {
