@@ -12,8 +12,8 @@ module.exports = class TechpartStrategy extends SpiderStrategy {
     super();
     this.#store = "Techpart";
     this.#initialPage = "https://www.techpartinfo.com.br/";
-    this.#regexPagesToCrawl = ".*techpartinfo.com.br\/?[^#.]*$";
-    this.#regexProducts = ".*www.techpartinfo.com.br\/produto\/([^#/.]+-.[^#/.]+){2,}\/?$";
+    this.#regexPagesToCrawl = ".*www.techpartinfo.com.br(\/?(?!carrinho|#)([a-z0-9].-*))*";
+    this.#regexProducts = ".*www.techpartinfo.com.br\/produto\/([^#/.]+-.[^#/.]+){2,}\/?.[^#/.]*$";
     this.#urlsToAccess = [];
     this.#index = 0;
   }
