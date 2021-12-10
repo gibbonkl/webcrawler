@@ -12,10 +12,22 @@ module.exports = class PichauStrategy extends SpiderStrategy {
     super();
     this.#store = "Pichau";
     this.#initialPage = "https://www.pichau.com.br/";
-    this.#regexPagesToCrawl = ".*www.pichau.com.br\/?[^#.]*$";
+    this.#regexPagesToCrawl = ".*www.pichau.com.br.*";
     this.#regexProducts = ".*www.pichau.com.br\/([^#/.]+-.[^#/.]+){2,}\/?$";
-    this.#urlsToAccess = [];
     this.#index = 0;
+
+    /* initial interest urls */
+    this.#urlsToAccess = [
+      'https://www.pichau.com.br/hardware', 
+      'https://www.pichau.com.br/perfericos',
+      'https://www.pichau.com.br/eletronicos/'
+    ];
+    
+    for (let i = 2; i < 20; i++) {
+      this.#urlsToAccess.push(this.#urlsToAccess[0] + `?page=${i}`)
+      this.#urlsToAccess.push(this.#urlsToAccess[1] + `?page=${i}`)
+      this.#urlsToAccess.push(this.#urlsToAccess[2] + `?page=${i}`)
+    }
   }
 
   getTitleSelector() {

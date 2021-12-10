@@ -1,90 +1,109 @@
 const puppeteer = require("puppeteer");
 const { InsertProduct, SelectProducts } = require("./api");
 
-module.exports = async (Spider) => {
-  let maxPagesToCrawl = 2000;
-  let crawledUrls = [];
-  let dbUrls = [];
-  let checkedUrls = [];
+class Scraper {
+  constructor(spiderInstance) {
+    this.spiderInstance = spiderInstance;
+    this.maxPagesToCrawl = 100;
+    this.prods = 0;
 
-  /* headless browser configs */
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
+    /* gets database urls */
+    try {
+      let dbUrls = (async () => { await SelectProducts({ store: this.spiderInstance.getStore() }); })();
 
-  await page.setUserAgent(
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
-  );
+      if (dbUrls.length > 0)
+        dbUrls = dbUrls.forEach((row) =>
+          this.spiderInstance.setUrlToAccess(row.url)
+        );
 
-  /* gets database urls */
-  try {
-    dbUrls = await SelectProducts({ store: Spider.getStore() });
-    dbUrls = dbUrls.map((row) => row.url);
-    console.log(dbUrls.length, " mapped urls from the database");
-  } catch (error) {
-    console.log("db mapped urls error: \n", error.message);
+      console.log(dbUrls.length, " mapped urls from the database");
+    } catch (error) {
+      console.log("db mapped urls error: \n", error.message);
+    }
+
+    /* headless browser configs */
+    /* crawler and scraper */
+    (async () => { 
+      await this.setupBrowser();
+      console.log('Starting scrape with ', this.spiderInstance.getInitialPage());
+      await this.scrape(this.spiderInstance.getInitialPage()); 
+    })();
+    
   }
 
-  /* crawler and scraper */
-  async function crawler(spiderInstance, urlIn) {
-    await page.goto(urlIn);
+  async setupBrowser() {
+    this.browser = await puppeteer.launch();
+    this.page = await this.browser.newPage();
+
+    await this.page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
+    );
+  }
+
+  async scrape(urlIn) {
+    await this.page.goto(urlIn);
 
     /* gets all urls from the page */
-    crawledUrls = await page.$$eval("a", (assetLinks) =>
-      assetLinks.map((link) => link.href)
-    );
-
-    console.log(crawledUrls.length, " crawled urls on ", urlIn);
-
+    let crawledUrls = await this.page.$$eval("a", (assetLinks) => assetLinks.map((link) => link.href));
+    //console.log(crawledUrls.length, " crawled urls on ", urlIn);
+    
+    /* sets url to crawl if it's not in the list yet and and matches the regex of interest */
     for (let crawledUrl of crawledUrls) {
-      // console.log('Spider idx', spiderInstance.getIndex())
-      // console.log('Spider list size',spiderInstance.getUrlsToAccessLength())
-
-      /* sets url to crawl if it's not in the list yet and and matches the regex of interest */
       if (
-        spiderInstance.notInUrlsToAccess(crawledUrl) &&
-        new RegExp(spiderInstance.getRegexPagesToCrawl()).test(crawledUrl)
+        this.spiderInstance.notInUrlsToAccess(crawledUrl) &&
+        new RegExp(this.spiderInstance.getRegexPagesToCrawl()).test(crawledUrl)
       ) {
-        spiderInstance.setUrlToAccess(crawledUrl);
+        this.spiderInstance.setUrlToAccess(crawledUrl);
       }
     }
 
     /* scrapes if it's a product and it's not in the database yet */
-    if (
-      new RegExp(spiderInstance.getRegexProducts()).test(urlIn) &&
-      dbUrls.indexOf(urlIn) == -1
-    ) {
+    if (new RegExp(this.spiderInstance.getRegexProducts()).test(urlIn)) {
       try {
-        let title = await page.evaluate(spiderInstance.getTitleSelector());
-        let price = await page.evaluate(spiderInstance.getPriceSelector());
+        let title = await this.page.evaluate(this.spiderInstance.getTitleSelector());
+        let price = await this.page.evaluate(this.spiderInstance.getPriceSelector());
+        
 
         if (title && price) {
-          await InsertProduct({
-            url: urlIn,
-            title: title,
-            price: price,
-            store: spiderInstance.getStore(),
-          });
-
-          /* adds the scraped url to the list not to crawl it */
-          dbUrls.push(urlIn);
+          (async () => {
+            await InsertProduct({
+              url: urlIn,
+              title: title,
+              price: price,
+              store: this.spiderInstance.getStore(),
+            });
+          })();
+          this.prods++;
         }
       } catch (error) {
         console.log("Did not insert. Error: ", error.message);
       }
     }
-    
-    spiderInstance.incrementIndex();
+
+    console.log(
+      this.spiderInstance.getStore() +
+      " Checked URLS: " +
+        this.spiderInstance.getIndex() +
+        "\tProducts: " +
+        this.prods +  
+        "\tUrls to check: " +
+        this.spiderInstance.getUrlsToAccessLength()
+    );
+
+    this.spiderInstance.incrementIndex();
 
     /* tests if there are more pages to crawl */
     if (
-      spiderInstance.getUrlsToAccessLength() > spiderInstance.getIndex() &&
-      spiderInstance.getIndex() < maxPagesToCrawl
+      this.spiderInstance.getUrlsToAccessLength() >
+        this.spiderInstance.getIndex() &&
+      this.spiderInstance.getIndex() < this.maxPagesToCrawl
     ) {
-      return crawler(spiderInstance, spiderInstance.getNextUrl());
+      return this.scrape(this.spiderInstance.getNextUrl());
+      
+    } else {
+      await this.browser.close();
     }
   }
+}
 
-  await crawler(Spider, Spider.getInitialPage());
-
-  browser.close();
-};
+module.exports = Scraper;

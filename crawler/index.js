@@ -1,6 +1,5 @@
 const { readdir } = require("fs");
-const scraper = require("./Scraper");
-const updater = require("./Updater");
+const Scraper = require("./Scraper");
 
 dirname = "/home/deb";
 
@@ -10,7 +9,6 @@ readdir(`${dirname}/webcrawler/crawler/implementations`, (err, files) => {
   files.forEach(function (path) {
     const Spider = require(`./implementations/${path}`);
 
-    scraper(new Spider());
-    //updater(new Spider());
+    const scraper = new Scraper(new Spider());
   });
 });
