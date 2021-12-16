@@ -1,0 +1,223 @@
+{
+	"info": {
+		"_postman_id": "438e96f0-9ec6-4587-8af9-1442e67f1905",
+		"name": "crawler routes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "título",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/products/?title=memoria",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"products",
+						""
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "memoria"
+						}
+					]
+				},
+				"description": "buscar por título"
+			},
+			"response": []
+		},
+		{
+			"name": "url",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/products/?url=pichau.com/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"products",
+						""
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "pichau.com/"
+						}
+					]
+				},
+				"description": "buscar por url"
+			},
+			"response": []
+		},
+		{
+			"name": "loja",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/products/?store=techpart",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"products",
+						""
+					],
+					"query": [
+						{
+							"key": "store",
+							"value": "techpart"
+						}
+					]
+				},
+				"description": "buscar por loja"
+			},
+			"response": []
+		},
+		{
+			"name": "preço mínimo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/products/?minPrice=150",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"products",
+						""
+					],
+					"query": [
+						{
+							"key": "minPrice",
+							"value": "150"
+						}
+					]
+				},
+				"description": "buscar por preço mínimo"
+			},
+			"response": []
+		},
+		{
+			"name": "preço máximo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/products/?maxPrice=150",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"products",
+						""
+					],
+					"query": [
+						{
+							"key": "maxPrice",
+							"value": "150"
+						}
+					]
+				},
+				"description": "buscar por preço máximo"
+			},
+			"response": []
+		},
+		{
+			"name": "faixa de preços",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/products/?minPrice=200&maxPrice=300",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"products",
+						""
+					],
+					"query": [
+						{
+							"key": "minPrice",
+							"value": "200"
+						},
+						{
+							"key": "maxPrice",
+							"value": "300"
+						}
+					]
+				},
+				"description": "procurar por faixa de preços"
+			},
+			"response": []
+		},
+		{
+			"name": "título + preço",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/products/?minPrice=200&maxPrice=300&title=cadeira",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"products",
+						""
+					],
+					"query": [
+						{
+							"key": "minPrice",
+							"value": "200"
+						},
+						{
+							"key": "maxPrice",
+							"value": "300"
+						},
+						{
+							"key": "title",
+							"value": "cadeira"
+						}
+					]
+				},
+				"description": "combinar parâmetros de busca"
+			},
+			"response": []
+		},
+		{
+			"name": "todos os produtos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/products/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"products",
+						""
+					]
+				},
+				"description": "buscar todos os produtos"
+			},
+			"response": []
+		}
+	]
+}

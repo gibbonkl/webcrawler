@@ -91,7 +91,7 @@ class Scraper {
     );
 
     this.spiderInstance.incrementIndex();
-
+console.log("TEATANDO D URL ",this.spiderInstance.getNextUrl())
     /* tests if there are more pages to crawl */
     if (
       this.spiderInstance.getUrlsToAccessLength() >
